@@ -20,5 +20,10 @@ DISEASE_1_INPUT = f"{RAW_DIR}/disease_type_1_outbreak"
 DISEASE_1_OUTPUT = f"{PROCESSED_DIR}/disease_type_1_outbreak"
 
 # Disease type 2 foi
+IMM_STARTPOP_TEST = f"{PROCESSED_DIR}/imm_startpop/test.shp"
+
 FOI_INPUT = f"{PROCESSED_DIR}/foi"
-WFOI_OUTPUT = f"{PROCESSED_DIR}/foi/weighted_foi.csv"
+WFOI_OUTPUT = f"{FOI_INPUT}/weighted_foi.csv"
+FOI_RASTER = f"{FOI_INPUT}/foi_aligned.tif"
+GM_ID_RASTER = f"{GM_DIR}/gm_id_raster.tif"
+POP_RASTER = f"{PROCESSED_DIR}/pop_raster/pop_frac.tif"

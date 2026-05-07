@@ -2,6 +2,7 @@ import csv
 import logging
 import os
 import sys
+
 sys.append("../../")
 
 import config
@@ -21,7 +22,14 @@ logger = logging.getLogger(__name__)
 
 # The first row of data will be the gm_ids
 
-def create_weighted_foi_table(dir_multiband_foi: str, dir_imm_shp: str, dir_pop_frac: str, dir_gm_raster: str, dir_output: str):
+
+def create_weighted_foi_table(
+    dir_multiband_foi: str,
+    dir_imm_shp: str,
+    dir_pop_frac: str,
+    dir_gm_raster: str,
+    dir_output: str,
+):
     """
     Create table of weighted foi, with rows for each day and columns for each gm
     The values will the weighted foi values
@@ -40,7 +48,7 @@ def create_weighted_foi_table(dir_multiband_foi: str, dir_imm_shp: str, dir_pop_
     # Add gm ids as first rows
     gm_gdf = gpd.read_file(dir_imm_shp)
     list_gm_ids = gm_gdf["ID"].tolist()
-    
+
     list_rows = []
     list_rows.append(list_gm_ids)
 
@@ -51,11 +59,13 @@ def create_weighted_foi_table(dir_multiband_foi: str, dir_imm_shp: str, dir_pop_
         # Replace all negative values in foi_ras_day with 0
         foi_ras_day[foi_ras_day < 0] = 0
 
-        new_row = _compute_weighted_foi_row(foi_ras_day, pop_frac_ras, gm_ras, list_gm_ids)
+        new_row = _compute_weighted_foi_row(
+            foi_ras_day, pop_frac_ras, gm_ras, list_gm_ids
+        )
         list_rows.append(new_row)
 
     # Creating csv and saving it
-    with open(dir_output, mode='w', newline='') as file:
+    with open(dir_output, mode="w", newline="") as file:
         writer = csv.writer(file)
         writer.writerows(list_rows)
 
@@ -67,19 +77,20 @@ def _compute_weighted_foi_row(foi_ras, pop_frac_ras, gm_ras, list_gm_ids: list[i
     rows = []
     for gm_id in list_gm_ids:
         # Create mask where gm_ras has cell value equal to gm_id
-        mask = (gm_ras == gm_id)   
+        mask = gm_ras == gm_id
         # Calculate weighted foi as sum(foi * pop_frac) for those cells
-        weighted_foi = np.sum((1 - np.exp(-foi_ras[mask])) * pop_frac_ras[mask]) 
+        weighted_foi = np.sum((1 - np.exp(-foi_ras[mask])) * pop_frac_ras[mask])
         rows.append(weighted_foi)
 
     return rows
 
+
 if __name__ == "__main__":
 
-    dir_multiband_foi = f"{config.FOI_INPUT}/foi_aligned.tif"
-
-    dir_imm_shp = "../imbit_model/data/input/imm_startpop/test.shp"
-    dir_pop_frac = f"{config.FOI_INPUT}/pop_frac.tif"
-    dir_gm_raster = f"{config.GM_DIR}/gm_id.tif"
-
-    create_weighted_foi_table(dir_multiband_foi, dir_imm_shp, dir_pop_frac, dir_gm_raster, config.WFOI_OUTPUT)
+    create_weighted_foi_table(
+        dir_multiband_foi = config.FOI_RASTER,
+        dir_imm_shp = config.IMM_STARTPOP_TEST,
+        dir_pop_frac = config.POP_RASTER,
+        dir_gm_raster=config.GM_ID_RASTER,
+        dir_output=config.WFOI_OUTPUT,
+    )
