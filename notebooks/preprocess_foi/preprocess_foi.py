@@ -1,6 +1,10 @@
 import csv
 import logging
 import os
+import sys
+sys.append("../../")
+
+import config
 
 import rasterio
 import geopandas as gpd
@@ -72,12 +76,10 @@ def _compute_weighted_foi_row(foi_ras, pop_frac_ras, gm_ras, list_gm_ids: list[i
 
 if __name__ == "__main__":
 
-    dir_multiband_foi = "data/input/foi/foi_aligned.tif"
+    dir_multiband_foi = f"{config.FOI_INPUT}/foi_aligned.tif"
 
     dir_imm_shp = "../imbit_model/data/input/imm_startpop/test.shp"
-    dir_pop_frac = "data/input/pop_frac/pop_frac.tif"
-    dir_gm_raster = "data/input/gemeentes/gm_id.tif"
+    dir_pop_frac = f"{config.FOI_INPUT}/pop_frac.tif"
+    dir_gm_raster = f"{config.GM_DIR}/gm_id.tif"
 
-    dir_output = "data/output/foi/weighted_foi.csv"
-
-    create_weighted_foi_table(dir_multiband_foi, dir_imm_shp, dir_pop_frac, dir_gm_raster, dir_output)
+    create_weighted_foi_table(dir_multiband_foi, dir_imm_shp, dir_pop_frac, dir_gm_raster, config.WFOI_OUTPUT)
