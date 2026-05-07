@@ -1,6 +1,7 @@
 import os
 import sys
 sys.path.append('../../')
+
 import config
 
 import geopandas as gpd
@@ -167,6 +168,5 @@ if __name__ == "__main__":
         create_iv_tables(traj_csv_dir, iv_table_dir,prc_infc_loc_shp_dir)
 
         df = pd.read_csv(iv_table_dir)
-        print(df.max().max())
 
     print("Preprocessing complete")
